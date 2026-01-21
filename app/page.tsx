@@ -144,11 +144,19 @@ export default function Home() {
                   <input 
                     autoFocus
                     type="text" 
-                    value={editText}
-                    onChange={(e) => setEditText(e.target.value)}
-                    onBlur={() => saveText(task.id)}
-                    onKeyDown={(e) => e.key === 'Enter' && saveText(task.id)}
-                    className="bg-transparent border-b border-white text-white focus:outline-none w-full"
+                    // 1. 防止 undefined 报错
+                    value={task.text || ''}
+                    // 2. 加上占位符
+                    placeholder="写点什么..." 
+                    onChange={(e) => updateTaskText(task.id, e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') e.currentTarget.blur();
+                    }}
+                    disabled={task.completed} 
+                    // 3. 加上 flex-1 确保它永远占满横向空间，不会因为没字就消失
+                    className={`flex-1 min-w-0 bg-transparent w-full focus:outline-none text-sm md:text-base ${
+                      task.completed ? 'text-zinc-500 line-through cursor-not-allowed' : 'text-zinc-200'
+                    }`}
                   />
                 ) : (
                   <span 
